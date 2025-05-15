@@ -34,13 +34,13 @@ const db = mysql.createConnection({
 // Connect to MySQL
 db.connect((err: typeof MysqlError | null) => {
   if (err) throw err;
-  console.log("Connected to the database");
+  console.log("Connected to the database ✅");
 });
 
 app.post("/sync-notes", (req, res) => {
   const notes: Note[] = req.body.notes;
   if (!notes || notes.length === 0) {
-    return res.status(400).send("No notes to sync");
+    return res.status(400).send("No notes to sync ❌");
   }
 
   // Insert notes into the database
@@ -54,13 +54,12 @@ app.post("/sync-notes", (req, res) => {
     db.query(query, [Title, Description, Date], (err: any, result: any) => {
       if (err) {
         console.error("Error inserting note:", err);
-        return res.status(500).send("Failed to sync notes");
+        return res.status(500).send("Failed to sync notes ❌");
       }
     });
   });
 
-  res.status(200).send("Notes synced successfully");
-  console.log("Notes synced successfully");
+  res.status(200).send("Notes synced successfully ✅");
 });
 
 app.listen(port, () => {
