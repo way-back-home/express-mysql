@@ -11,6 +11,7 @@ app.use(express.json());
 
 // type
 type Note = {
+  id: string;
   Title: string;
   Description: string;
   Date: string;
@@ -45,13 +46,13 @@ app.post("/sync-notes", (req, res) => {
 
   // Insert notes into the database
   notes.forEach((note) => {
-    const { Title, Description, Date } = note;
+    const {id, Title, Description, Date } = note;
 
     // Check if the note already exists (using a unique identifier like `id` or `Date`)
     const query =
-      "INSERT INTO notes (Title, Description, Date, synced) VALUES (?, ?, ?, 1)";
+      "INSERT INTO notes (note_id, Title, Description, Date, synced) VALUES (?, ?, ?, ?, 1)";
 
-    db.query(query, [Title, Description, Date], (err: any, result: any) => {
+    db.query(query, [id, Title, Description, Date], (err: any, result: any) => {
       if (err) {
         console.error("Error inserting note:", err);
         return res.status(500).send("Failed to sync notes ❌");
