@@ -61,6 +61,7 @@ app.post("/sync-notes", (req, res) => {
   });
 
   res.status(200).send("Notes synced successfully");
+  console.log("Notes synced successfully");
 });
 
 app.listen(port, () => {
