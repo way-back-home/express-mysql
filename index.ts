@@ -104,6 +104,7 @@ app.post("/sync-notes", (req, res) => {
   });
 });
 
+// show 
 app.get("/notes", (req, res) => {
   db.query("SELECT * FROM notes", (err: any, results: Note[]) => {
     if (err) {
@@ -114,6 +115,7 @@ app.get("/notes", (req, res) => {
   });
 });
 
+// delete
 app.delete("/notes/:id", (req, res) => {
   const noteId = req.params.id;
 
@@ -127,6 +129,22 @@ app.delete("/notes/:id", (req, res) => {
   });
 });
 
+// edit 
+app.put("/notes/:id", (req, res) => {
+  const noteId = req.params.id;
+  const { Title, Description, Date } = req.body;
+
+  // Update query
+  const query =
+    "UPDATE notes SET Title = ?, Description = ?, Date = ? WHERE id = ?";
+  db.query(query, [Title, Description, Date, noteId], (err: any, result: any) => {
+    if (err) {
+      console.error("Error updating note:", err);
+      return res.status(500).send("Failed to update note");
+    }
+    res.status(200).send("Note updated on server");
+  });
+});
 
 
 
