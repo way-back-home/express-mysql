@@ -18,11 +18,17 @@ type Note = {
 
 // MySQL database connection
 const db = mysql.createConnection({
-  host: "sql.freedb.tech",
-  user: "freedb_root@",
-  password: "*PcgM&xjwrdK6Vw",
-  port: "3306",
-  database: "freedb_notes-db",
+  // host: "sql.freedb.tech",
+  // user: "freedb_root@",
+  // password: "*PcgM&xjwrdK6Vw",
+  // port: "3306",
+  // database: "freedb_notes-db",
+
+  host: "yamanote.proxy.rlwy.net",
+  user: "root",
+  password: "RAHMsDlbUpPCxwCzIuFZpkqQlRNsNioN",
+  port: 35165,
+  database: "railway",
 });
 
 // Connect to MySQL
