@@ -117,7 +117,7 @@ app.get("/notes", (req, res) => {
 app.delete("/notes/:id", (req, res) => {
   const noteId = req.params.id;
 
-  db.query("DELETE FROM notes WHERE id = ?", [noteId], (err: any, result: any) => {
+  db.query("DELETE FROM notes WHERE note_id = ?", [noteId], (err: any, result: any) => {
     if (err) {
       console.error("Error deleting note:", err);
       return res.status(500).send("Failed to delete note");
