@@ -74,7 +74,7 @@ app.post("/sync-notes", (req, res) => {
   notes.forEach((note, index) => {
     const { id, Title, Description, Date } = note;
 
-    const checkQuery = "SELECT * FROM notes WHERE note_id = ? AND Title = ?";
+    const checkQuery = "SELECT * FROM notes WHERE Title = ?";
     db.query(checkQuery, [id, Title], (checkErr: any, results: any[]) => {
       if (checkErr) {
         console.error("Error checking for existing note:", checkErr);
