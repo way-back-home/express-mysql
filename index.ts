@@ -14,7 +14,7 @@ type Note = {
   Title: string;
   Description: string;
   Date: string;
-  synced: bool;
+  synced: boolean;
 };
 
 // MySQL database connection
