@@ -14,7 +14,6 @@ type Note = {
   Title: string;
   Description: string;
   Date: string;
-  synced: boolean;
 };
 
 // MySQL database connection
@@ -46,13 +45,13 @@ app.post("/sync-notes", (req, res) => {
 
   // Insert notes into the database
   notes.forEach((note) => {
-    const { Title, Description, Date, synced } = note;
+    const { Title, Description, Date } = note;
 
     // Check if the note already exists (using a unique identifier like `id` or `Date`)
     const query =
-      "INSERT INTO notes (Title, Description, Date, synced) VALUES (?, ?, ?, ?)";
+      "INSERT INTO notes (Title, Description, Date, synced) VALUES (?, ?, ?, 1)";
 
-    db.query(query, [Title, Description, Date, synced], (err: any, result: any) => {
+    db.query(query, [Title, Description, Date], (err: any, result: any) => {
       if (err) {
         console.error("Error inserting note:", err);
         return res.status(500).send("Failed to sync notes");
