@@ -104,6 +104,17 @@ app.post("/sync-notes", (req, res) => {
   });
 });
 
+app.get("/notes", (req, res) => {
+  db.query("SELECT * FROM notes", (err: any, results: Note[]) => {
+    if (err) {
+      console.error("Error fetching notes:", err);
+      return res.status(500).send("Failed to fetch notes");
+    }
+    res.json(results);
+  });
+});
+
+
 
 app.listen(port, () => {
   console.log(`Sandbox listening on port ${port}`);
