@@ -38,30 +38,72 @@ db.connect((err: typeof MysqlError | null) => {
   console.log("Connected to the database ✅");
 });
 
+// app.post("/sync-notes", (req, res) => {
+//   const notes: Note[] = req.body.notes;
+//   if (!notes || notes.length === 0) {
+//     return res.status(400).send("No notes to sync ❌");
+//   }
+
+//   // Insert notes into the database
+//   notes.forEach((note) => {
+//     const {id, Title, Description, Date } = note;
+
+//     // Check if the note already exists (using a unique identifier like `id` or `Date`)
+//     const query =
+//       "INSERT INTO notes (note_id, Title, Description, Date, synced) VALUES (?, ?, ?, ?, 1)";
+
+//     db.query(query, [id, Title, Description, Date], (err: any, result: any) => {
+//       if (err) {
+//         console.error("Error inserting note:", err);
+//         return res.status(500).send("Failed to sync notes ❌");
+//       }
+//     });
+//   });
+
+//   res.status(200).send("Notes synced successfully ✅");
+// });
+
 app.post("/sync-notes", (req, res) => {
   const notes: Note[] = req.body.notes;
   if (!notes || notes.length === 0) {
     return res.status(400).send("No notes to sync ❌");
   }
 
-  // Insert notes into the database
-  notes.forEach((note) => {
-    const {id, Title, Description, Date } = note;
+  let insertedCount = 0;
 
-    // Check if the note already exists (using a unique identifier like `id` or `Date`)
-    const query =
-      "INSERT INTO notes (note_id, Title, Description, Date, synced) VALUES (?, ?, ?, ?, 1)";
+  notes.forEach((note, index) => {
+    const { id, Title, Description, Date } = note;
 
-    db.query(query, [id, Title, Description, Date], (err: any, result: any) => {
-      if (err) {
-        console.error("Error inserting note:", err);
-        return res.status(500).send("Failed to sync notes ❌");
+    const checkQuery = "SELECT * FROM notes WHERE note_id = ? AND Title = ?";
+    db.query(checkQuery, [id, Title], (checkErr: any, results: any[]) => {
+      if (checkErr) {
+        console.error("Error checking for existing note:", checkErr);
+        return res.status(500).send("Failed to check notes ❌");
+      }
+
+      if (results.length === 0) {
+        const insertQuery =
+          "INSERT INTO notes (note_id, Title, Description, Date, synced) VALUES (?, ?, ?, ?, 1)";
+        db.query(insertQuery, [id, Title, Description, Date], (insertErr: any) => {
+          if (insertErr) {
+            console.error("Error inserting note:", insertErr);
+            return res.status(500).send("Failed to sync notes ❌");
+          }
+
+          insertedCount++;
+          // Send success response only after last note
+          if (index === notes.length - 1) {
+            res.status(200).send(`Notes synced successfully ✅ (${insertedCount} new)`);
+          }
+        });
+      } else if (index === notes.length - 1) {
+        // If last note, still send response even if no insert was needed
+        res.status(200).send(`Notes synced successfully ✅ (${insertedCount} new)`);
       }
     });
   });
-
-  res.status(200).send("Notes synced successfully ✅");
 });
+
 
 app.listen(port, () => {
   console.log(`Sandbox listening on port ${port}`);
