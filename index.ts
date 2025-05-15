@@ -114,6 +114,20 @@ app.get("/notes", (req, res) => {
   });
 });
 
+app.delete("/notes/:id", (req, res) => {
+  const noteId = req.params.id;
+
+  db.query("DELETE FROM notes WHERE id = ?", [noteId], (err: any, result: any) => {
+    if (err) {
+      console.error("Error deleting note:", err);
+      return res.status(500).send("Failed to delete note");
+    }
+
+    res.status(200).send("Note deleted from server");
+  });
+});
+
+
 
 
 app.listen(port, () => {
