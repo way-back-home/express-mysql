@@ -11,9 +11,11 @@ app.use(express.json());
 
 // type
 type Note = {
+  id: string,
   Title: string;
   Description: string;
   Date: string;
+  synced: string;
 };
 
 // MySQL database connection
@@ -45,13 +47,13 @@ app.post("/sync-notes", (req, res) => {
 
   // Insert notes into the database
   notes.forEach((note) => {
-    const { Title, Description, Date } = note;
+    const {id, Title, Description, Date, synced } = note;
 
     // Check if the note already exists (using a unique identifier like `id` or `Date`)
     const query =
-      "INSERT INTO notes (Title, Description, Date) VALUES (?, ?, ?)";
+      "INSERT INTO notes (id, Title, Description, Date, synced) VALUES (?, ?, ?, ?, ?)";
 
-    db.query(query, [Title, Description, Date], (err: any, result: any) => {
+    db.query(query, [id, Title, Description, Date, synced], (err: any, result: any) => {
       if (err) {
         console.error("Error inserting note:", err);
         return res.status(500).send("Failed to sync notes");
@@ -60,10 +62,6 @@ app.post("/sync-notes", (req, res) => {
   });
 
   res.status(200).send("Notes synced successfully");
-});
-
-app.get("/", (req, res) => {
-  res.send("Hello CodeSandbox!");
 });
 
 app.listen(port, () => {
