@@ -136,7 +136,7 @@ app.put("/notes/:id", (req, res) => {
 
   // Update query
   const query =
-    "UPDATE notes SET Title = ?, Description = ?, Date = ? WHERE id = ?";
+    "UPDATE notes SET Title = ?, Description = ?, Date = ? WHERE note_id = ?";
   db.query(query, [Title, Description, Date, noteId], (err: any, result: any) => {
     if (err) {
       console.error("Error updating note:", err);
