@@ -46,7 +46,7 @@ app.post("/sync-notes", (req, res) => {
 
   // Insert notes into the database
   notes.forEach((note) => {
-    const {id, Title, Description, Date, synced } = note;
+    const { Title, Description, Date, synced } = note;
 
     // Check if the note already exists (using a unique identifier like `id` or `Date`)
     const query =
